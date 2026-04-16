@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { ScoreboardProvider } from './context/ScoreboardContext';
 import { Display } from './components/Display';
 import { Controller } from './components/Controller';
+import { DisplaySelector } from './components/DisplaySelector';
 
 function Home() {
   return (
@@ -36,15 +36,14 @@ function Home() {
 
 function App() {
   return (
-    <ScoreboardProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/display" element={<Display />} />
-          <Route path="/controller" element={<Controller />} />
-        </Routes>
-      </Router>
-    </ScoreboardProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/display" element={<Display />} />
+        <Route path="/controller" element={<DisplaySelector />} />
+        <Route path="/controller/:displayId" element={<Controller />} />
+      </Routes>
+    </Router>
   );
 }
 
