@@ -116,7 +116,12 @@ export const Display: React.FC = () => {
         </div>
 
         {/* Competitor 1 row */}
-        <div className="grid gap-4" style={{gridTemplateColumns: '2fr 2rem 1fr 1fr 1fr'}}>
+        <div className="relative grid gap-4" style={{gridTemplateColumns: '2fr 2rem 1fr 1fr 1fr'}}>
+          {competitor1.disqualified && (
+            <div className="absolute inset-0 rounded-2xl z-10 flex items-center justify-center backdrop-blur-sm bg-black/40">
+              <span className="text-5xl font-black uppercase tracking-widest text-red-400 drop-shadow-lg">Disqualified</span>
+            </div>
+          )}
           <div className="bg-blue-600 rounded-2xl p-6 flex items-center shadow-xl">
             <span className="text-5xl font-bold text-white truncate">{competitor1.name}</span>
           </div>
@@ -133,7 +138,12 @@ export const Display: React.FC = () => {
         </div>
 
         {/* Competitor 2 row */}
-        <div className="grid gap-4" style={{gridTemplateColumns: '2fr 2rem 1fr 1fr 1fr'}}>
+        <div className="relative grid gap-4" style={{gridTemplateColumns: '2fr 2rem 1fr 1fr 1fr'}}>
+          {competitor2.disqualified && (
+            <div className="absolute inset-0 rounded-2xl z-10 flex items-center justify-center backdrop-blur-sm bg-black/40">
+              <span className="text-5xl font-black uppercase tracking-widest text-red-400 drop-shadow-lg">Disqualified</span>
+            </div>
+          )}
           <div className="bg-white rounded-2xl p-6 flex items-center shadow-xl">
             <span className="text-5xl font-bold text-black truncate">{competitor2.name}</span>
           </div>

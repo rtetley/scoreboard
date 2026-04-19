@@ -30,12 +30,14 @@ export interface ScoreboardState {
     score: number;
     advantages: number;
     penalties: number;
+    disqualified: boolean;
   };
   competitor2: {
     name: string;
     score: number;
     advantages: number;
     penalties: number;
+    disqualified: boolean;
   };
   timer: {
     seconds: number;
@@ -44,8 +46,8 @@ export interface ScoreboardState {
 }
 
 export const DEFAULT_SCOREBOARD_STATE: ScoreboardState = {
-  competitor1: { name: 'Competitor 1', score: 0, advantages: 0, penalties: 0 },
-  competitor2: { name: 'Competitor 2', score: 0, advantages: 0, penalties: 0 },
+  competitor1: { name: 'Competitor 1', score: 0, advantages: 0, penalties: 0, disqualified: false },
+  competitor2: { name: 'Competitor 2', score: 0, advantages: 0, penalties: 0, disqualified: false },
   timer: { seconds: 300, running: false },
 };
 
@@ -70,6 +72,8 @@ export function applyMessage(
       return { ...state, competitor1: { ...state.competitor1, advantages: Number(payload) } };
     case 'competitor1/penalties':
       return { ...state, competitor1: { ...state.competitor1, penalties: Number(payload) } };
+    case 'competitor1/disqualified':
+      return { ...state, competitor1: { ...state.competitor1, disqualified: payload === 'true' } };
     case 'competitor2/name':
       return { ...state, competitor2: { ...state.competitor2, name: payload } };
     case 'competitor2/score':
@@ -78,6 +82,8 @@ export function applyMessage(
       return { ...state, competitor2: { ...state.competitor2, advantages: Number(payload) } };
     case 'competitor2/penalties':
       return { ...state, competitor2: { ...state.competitor2, penalties: Number(payload) } };
+    case 'competitor2/disqualified':
+      return { ...state, competitor2: { ...state.competitor2, disqualified: payload === 'true' } };
     case 'timer/seconds':
       return { ...state, timer: { ...state.timer, seconds: Number(payload) } };
     case 'timer/running':
@@ -98,10 +104,12 @@ export function publishFullState(
   t('competitor1/score', String(state.competitor1.score));
   t('competitor1/advantages', String(state.competitor1.advantages));
   t('competitor1/penalties', String(state.competitor1.penalties));
+  t('competitor1/disqualified', String(state.competitor1.disqualified));
   t('competitor2/name', state.competitor2.name);
   t('competitor2/score', String(state.competitor2.score));
   t('competitor2/advantages', String(state.competitor2.advantages));
   t('competitor2/penalties', String(state.competitor2.penalties));
+  t('competitor2/disqualified', String(state.competitor2.disqualified));
   t('timer/seconds', String(state.timer.seconds));
   t('timer/running', String(state.timer.running));
 }

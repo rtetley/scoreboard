@@ -129,9 +129,49 @@ export const Controller: React.FC = () => {
   const addAdvantage2 = () => setScoreboardState((p) => { const v = p.competitor2.advantages + 1; pub('competitor2/advantages', String(v)); return { ...p, competitor2: { ...p.competitor2, advantages: v } }; });
   const removeAdvantage2 = () => setScoreboardState((p) => { const v = Math.max(0, p.competitor2.advantages - 1); pub('competitor2/advantages', String(v)); return { ...p, competitor2: { ...p.competitor2, advantages: v } }; });
 
-  const addPenalty1 = () => setScoreboardState((p) => { const v = p.competitor1.penalties + 1; pub('competitor1/penalties', String(v)); return { ...p, competitor1: { ...p.competitor1, penalties: v } }; });
+  const addPenalty1 = () => setScoreboardState((p) => {
+    const v = p.competitor1.penalties + 1;
+    pub('competitor1/penalties', String(v));
+    let next = { ...p, competitor1: { ...p.competitor1, penalties: v } };
+    if (v === 2) {
+      // 2 penalties → opponent gains 1 advantage
+      const adv = next.competitor2.advantages + 1;
+      pub('competitor2/advantages', String(adv));
+      next = { ...next, competitor2: { ...next.competitor2, advantages: adv } };
+    } else if (v === 3) {
+      // 3 penalties → opponent gains 2 points
+      const score = next.competitor2.score + 2;
+      pub('competitor2/score', String(score));
+      next = { ...next, competitor2: { ...next.competitor2, score } };
+    } else if (v >= 4) {
+      // 4 penalties → this competitor is disqualified
+      pub('competitor1/disqualified', 'true');
+      next = { ...next, competitor1: { ...next.competitor1, disqualified: true } };
+    }
+    return next;
+  });
   const removePenalty1 = () => setScoreboardState((p) => { const v = Math.max(0, p.competitor1.penalties - 1); pub('competitor1/penalties', String(v)); return { ...p, competitor1: { ...p.competitor1, penalties: v } }; });
-  const addPenalty2 = () => setScoreboardState((p) => { const v = p.competitor2.penalties + 1; pub('competitor2/penalties', String(v)); return { ...p, competitor2: { ...p.competitor2, penalties: v } }; });
+  const addPenalty2 = () => setScoreboardState((p) => {
+    const v = p.competitor2.penalties + 1;
+    pub('competitor2/penalties', String(v));
+    let next = { ...p, competitor2: { ...p.competitor2, penalties: v } };
+    if (v === 2) {
+      // 2 penalties → opponent gains 1 advantage
+      const adv = next.competitor1.advantages + 1;
+      pub('competitor1/advantages', String(adv));
+      next = { ...next, competitor1: { ...next.competitor1, advantages: adv } };
+    } else if (v === 3) {
+      // 3 penalties → opponent gains 2 points
+      const score = next.competitor1.score + 2;
+      pub('competitor1/score', String(score));
+      next = { ...next, competitor1: { ...next.competitor1, score } };
+    } else if (v >= 4) {
+      // 4 penalties → this competitor is disqualified
+      pub('competitor2/disqualified', 'true');
+      next = { ...next, competitor2: { ...next.competitor2, disqualified: true } };
+    }
+    return next;
+  });
   const removePenalty2 = () => setScoreboardState((p) => { const v = Math.max(0, p.competitor2.penalties - 1); pub('competitor2/penalties', String(v)); return { ...p, competitor2: { ...p.competitor2, penalties: v } }; });
 
   const startTimer = () => {
@@ -154,10 +194,12 @@ export const Controller: React.FC = () => {
       pub('competitor1/score', '0');
       pub('competitor1/advantages', '0');
       pub('competitor1/penalties', '0');
+      pub('competitor1/disqualified', 'false');
       pub('competitor2/name', DEFAULT_SCOREBOARD_STATE.competitor2.name);
       pub('competitor2/score', '0');
       pub('competitor2/advantages', '0');
       pub('competitor2/penalties', '0');
+      pub('competitor2/disqualified', 'false');
       pub('timer/seconds', '300');
       pub('timer/running', 'false');
     }
@@ -256,9 +298,11 @@ export const Controller: React.FC = () => {
               <h3 className="text-lg font-semibold mb-3 text-gray-700">Points</h3>
               <div className="grid grid-cols-2 gap-3">
                 <button onClick={() => addScore1(2)} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 rounded-lg text-xl transition">+2</button>
-                <button onClick={() => addScore1(3)} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 rounded-lg text-xl transition">+3</button>
-                <button onClick={() => addScore1(4)} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 rounded-lg text-xl transition">+4</button>
                 <button onClick={() => removeScore1(2)} className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 rounded-lg text-xl transition">-2</button>
+                <button onClick={() => addScore1(3)} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 rounded-lg text-xl transition">+3</button>
+                <button onClick={() => removeScore1(3)} className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 rounded-lg text-xl transition">-3</button>
+                <button onClick={() => addScore1(4)} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 rounded-lg text-xl transition">+4</button>
+                <button onClick={() => removeScore1(4)} className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 rounded-lg text-xl transition">-4</button>
               </div>
             </div>
 
@@ -304,9 +348,11 @@ export const Controller: React.FC = () => {
               <h3 className="text-lg font-semibold mb-3 text-gray-700">Points</h3>
               <div className="grid grid-cols-2 gap-3">
                 <button onClick={() => addScore2(2)} className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 rounded-lg text-xl transition">+2</button>
-                <button onClick={() => addScore2(3)} className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 rounded-lg text-xl transition">+3</button>
-                <button onClick={() => addScore2(4)} className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 rounded-lg text-xl transition">+4</button>
                 <button onClick={() => removeScore2(2)} className="bg-red-700 hover:bg-red-800 text-white font-bold py-4 rounded-lg text-xl transition">-2</button>
+                <button onClick={() => addScore2(3)} className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 rounded-lg text-xl transition">+3</button>
+                <button onClick={() => removeScore2(3)} className="bg-red-700 hover:bg-red-800 text-white font-bold py-4 rounded-lg text-xl transition">-3</button>
+                <button onClick={() => addScore2(4)} className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 rounded-lg text-xl transition">+4</button>
+                <button onClick={() => removeScore2(4)} className="bg-red-700 hover:bg-red-800 text-white font-bold py-4 rounded-lg text-xl transition">-4</button>
               </div>
             </div>
 
