@@ -150,7 +150,27 @@ export const Controller: React.FC = () => {
     }
     return next;
   });
-  const removePenalty1 = () => setScoreboardState((p) => { const v = Math.max(0, p.competitor1.penalties - 1); pub('competitor1/penalties', String(v)); return { ...p, competitor1: { ...p.competitor1, penalties: v } }; });
+  const removePenalty1 = () => setScoreboardState((p) => {
+    const v = Math.max(0, p.competitor1.penalties - 1);
+    pub('competitor1/penalties', String(v));
+    let next = { ...p, competitor1: { ...p.competitor1, penalties: v } };
+    if (p.competitor1.penalties === 4) {
+      // 4 → 3: remove disqualified
+      pub('competitor1/disqualified', 'false');
+      next = { ...next, competitor1: { ...next.competitor1, disqualified: false } };
+    } else if (p.competitor1.penalties === 3) {
+      // 3 → 2: remove 2 points from opponent
+      const score = Math.max(0, next.competitor2.score - 2);
+      pub('competitor2/score', String(score));
+      next = { ...next, competitor2: { ...next.competitor2, score } };
+    } else if (p.competitor1.penalties === 2) {
+      // 2 → 1: remove 1 advantage from opponent
+      const adv = Math.max(0, next.competitor2.advantages - 1);
+      pub('competitor2/advantages', String(adv));
+      next = { ...next, competitor2: { ...next.competitor2, advantages: adv } };
+    }
+    return next;
+  });
   const addPenalty2 = () => setScoreboardState((p) => {
     const v = p.competitor2.penalties + 1;
     pub('competitor2/penalties', String(v));
@@ -172,7 +192,27 @@ export const Controller: React.FC = () => {
     }
     return next;
   });
-  const removePenalty2 = () => setScoreboardState((p) => { const v = Math.max(0, p.competitor2.penalties - 1); pub('competitor2/penalties', String(v)); return { ...p, competitor2: { ...p.competitor2, penalties: v } }; });
+  const removePenalty2 = () => setScoreboardState((p) => {
+    const v = Math.max(0, p.competitor2.penalties - 1);
+    pub('competitor2/penalties', String(v));
+    let next = { ...p, competitor2: { ...p.competitor2, penalties: v } };
+    if (p.competitor2.penalties === 4) {
+      // 4 → 3: remove disqualified
+      pub('competitor2/disqualified', 'false');
+      next = { ...next, competitor2: { ...next.competitor2, disqualified: false } };
+    } else if (p.competitor2.penalties === 3) {
+      // 3 → 2: remove 2 points from opponent
+      const score = Math.max(0, next.competitor1.score - 2);
+      pub('competitor1/score', String(score));
+      next = { ...next, competitor1: { ...next.competitor1, score } };
+    } else if (p.competitor2.penalties === 2) {
+      // 2 → 1: remove 1 advantage from opponent
+      const adv = Math.max(0, next.competitor1.advantages - 1);
+      pub('competitor1/advantages', String(adv));
+      next = { ...next, competitor1: { ...next.competitor1, advantages: adv } };
+    }
+    return next;
+  });
 
   const startTimer = () => {
     setScoreboardState((p) => ({ ...p, timer: { ...p.timer, running: true } }));
