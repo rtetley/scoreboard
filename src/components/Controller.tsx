@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { useMqttClient } from '../hooks/useMqttClient';
 import {
@@ -79,14 +79,20 @@ export const Controller: React.FC = () => {
     [displayId, publish],
   );
 
+  // Debounce timers for competitor name inputs
+  const name1Timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const name2Timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // ── Actions ──────────────────────────────────────────────────────────────
   const setCompetitor1Name = (name: string) => {
     setScoreboardState((p) => ({ ...p, competitor1: { ...p.competitor1, name } }));
-    pub('competitor1/name', name);
+    if (name1Timer.current) clearTimeout(name1Timer.current);
+    name1Timer.current = setTimeout(() => pub('competitor1/name', name), 500);
   };
   const setCompetitor2Name = (name: string) => {
     setScoreboardState((p) => ({ ...p, competitor2: { ...p.competitor2, name } }));
-    pub('competitor2/name', name);
+    if (name2Timer.current) clearTimeout(name2Timer.current);
+    name2Timer.current = setTimeout(() => pub('competitor2/name', name), 500);
   };
 
   const addScore1 = (pts: number) => {

@@ -96,61 +96,56 @@ export const Display: React.FC = () => {
       </div>
 
       {/* Timer */}
-      <div className="mb-12">
+      <div className="mb-10 text-center">
         <div
-          className={`text-9xl font-bold tracking-wider font-mono transition-colors ${
-            timer.running ? 'text-white' : 'text-gray-400'
-          }`}
+          className="text-9xl font-bold tracking-wider font-mono text-white"
         >
           {formatTime(timer.seconds)}
         </div>
       </div>
 
-      {/* Scoreboard */}
-      <div className="w-full max-w-7xl grid grid-cols-2 gap-8">
-        {/* Competitor 1 */}
-        <div className="bg-blue-600 rounded-3xl p-12 shadow-2xl">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-white mb-8 truncate">{competitor1.name}</h2>
+      {/* Scoreboard — one row per competitor */}
+      <div className="w-full max-w-7xl flex flex-col gap-6">
+        {/* Column headers */}
+        <div className="grid gap-4 px-2" style={{gridTemplateColumns: '2fr 2rem 1fr 1fr 1fr'}}>
+          <div className="text-gray-500 text-2xl uppercase tracking-widest font-semibold">Competitor</div>
+          <div />
+          <div className="text-gray-500 text-2xl uppercase tracking-widest font-semibold text-center">Points</div>
+          <div className="text-gray-500 text-2xl uppercase tracking-widest font-semibold text-center">Advantages</div>
+          <div className="text-gray-500 text-2xl uppercase tracking-widest font-semibold text-center">Penalties</div>
+        </div>
 
-            <div className="mb-8">
-              <div className="text-8xl font-bold text-white mb-2">{competitor1.score}</div>
-              <div className="text-2xl text-blue-200 uppercase tracking-wide">Points</div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6 mt-8">
-              <div className="bg-blue-700 rounded-xl p-6">
-                <div className="text-5xl font-bold text-white mb-2">{competitor1.advantages}</div>
-                <div className="text-lg text-blue-200 uppercase">Advantages</div>
-              </div>
-              <div className="bg-blue-700 rounded-xl p-6">
-                <div className="text-5xl font-bold text-white mb-2">{competitor1.penalties}</div>
-                <div className="text-lg text-blue-200 uppercase">Penalties</div>
-              </div>
-            </div>
+        {/* Competitor 1 row */}
+        <div className="grid gap-4" style={{gridTemplateColumns: '2fr 2rem 1fr 1fr 1fr'}}>
+          <div className="bg-blue-600 rounded-2xl p-6 flex items-center shadow-xl">
+            <span className="text-5xl font-bold text-white truncate">{competitor1.name}</span>
+          </div>
+          <div />
+          <div className="bg-green-500 rounded-2xl p-6 flex flex-col items-center justify-center shadow-xl">
+            <span className="text-9xl font-bold text-white leading-none">{competitor1.score}</span>
+          </div>
+          <div className="bg-yellow-400 rounded-2xl p-6 flex flex-col items-center justify-center shadow-xl">
+            <span className="text-9xl font-bold text-white leading-none">{competitor1.advantages}</span>
+          </div>
+          <div className="bg-red-500 rounded-2xl p-6 flex flex-col items-center justify-center shadow-xl">
+            <span className="text-9xl font-bold text-white leading-none">{competitor1.penalties}</span>
           </div>
         </div>
 
-        {/* Competitor 2 */}
-        <div className="bg-red-600 rounded-3xl p-12 shadow-2xl">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-white mb-8 truncate">{competitor2.name}</h2>
-
-            <div className="mb-8">
-              <div className="text-8xl font-bold text-white mb-2">{competitor2.score}</div>
-              <div className="text-2xl text-red-200 uppercase tracking-wide">Points</div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6 mt-8">
-              <div className="bg-red-700 rounded-xl p-6">
-                <div className="text-5xl font-bold text-white mb-2">{competitor2.advantages}</div>
-                <div className="text-lg text-red-200 uppercase">Advantages</div>
-              </div>
-              <div className="bg-red-700 rounded-xl p-6">
-                <div className="text-5xl font-bold text-white mb-2">{competitor2.penalties}</div>
-                <div className="text-lg text-red-200 uppercase">Penalties</div>
-              </div>
-            </div>
+        {/* Competitor 2 row */}
+        <div className="grid gap-4" style={{gridTemplateColumns: '2fr 2rem 1fr 1fr 1fr'}}>
+          <div className="bg-white rounded-2xl p-6 flex items-center shadow-xl">
+            <span className="text-5xl font-bold text-black truncate">{competitor2.name}</span>
+          </div>
+          <div />
+          <div className="bg-green-500 rounded-2xl p-6 flex flex-col items-center justify-center shadow-xl">
+            <span className="text-9xl font-bold text-white leading-none">{competitor2.score}</span>
+          </div>
+          <div className="bg-yellow-400 rounded-2xl p-6 flex flex-col items-center justify-center shadow-xl">
+            <span className="text-9xl font-bold text-white leading-none">{competitor2.advantages}</span>
+          </div>
+          <div className="bg-red-500 rounded-2xl p-6 flex flex-col items-center justify-center shadow-xl">
+            <span className="text-9xl font-bold text-white leading-none">{competitor2.penalties}</span>
           </div>
         </div>
       </div>
